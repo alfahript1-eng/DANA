@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mini Wallet App</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial;}
+body{background:#0f172a;color:white;}
+#login{height:100vh;display:flex;justify-content:center;align-items:center;background:linear-gradient(135deg,#2563eb,#7c3aed);padding:20px;}
+.box{background:white;color:black;padding:20px;border-radius:20px;width:100%;max-width:360px;text-align:center;}
+.box input{width:100%;padding:12px;margin-top:10px;border-radius:10px;border:1px solid #ddd;}
+.box button{width:100%;padding:12px;margin-top:10px;border:none;border-radius:10px;background:#2563eb;color:white;}
+#app{display:none;}
+.header{padding:20px;background:linear-gradient(135deg,#2563eb,#7c3aed);border-radius:0 0 25px 25px;}
+.saldo{font-size:28px;font-weight:bold;margin-top:5px;}
+.card{background:#1e293b;margin:15px;padding:15px;border-radius:15px;}
+.nav{position:fixed;bottom:0;width:100%;display:flex;justify-content:space-around;background:#1e293b;padding:10px;}
+.nav div{text-align:center;font-size:12px;cursor:pointer;}
+.page{display:none;}
+.active{display:block;}
+</style>
+</head>
+<body>
+
+<div id="login">
+<div class="box">
+<h2>Login Wallet</h2>
+<input id="user" placeholder="Username">
+<input id="nomor" placeholder="Nomor HP">
+<input id="pin" type="password" placeholder="PIN">
+<button onclick="login()">Masuk</button>
+</div>
+</div>
+
+<div id="app">
+<div class="header">
+<div>Saldo</div>
+<div class="saldo" id="saldo">Rp50.000</div>
+</div>
+
+<div id="home" class="page active">
+<div class="card">
+<h3>Tantangan</h3>
+<p id="soal"></p>
+<input id="jawaban" type="number">
+<button onclick="cek()">Kirim</button>
+</div>
+
+<div class="card">
+<h3>Tarik Saldo</h3>
+<input id="jumlah" type="number">
+<button onclick="tarik()">Tarik</button>
+</div>
+
+<div class="card">
+<h3>Riwayat</h3>
+<div id="riwayat"></div>
+</div>
+</div>
+
+<div id="profil" class="page">
+<div class="card">
+<h3>Profil</h3>
+<p>Username: <span id="showUser"></span></p>
+<p>Nomor: <span id="showNomor"></span></p>
+</div>
+</div>
+</div>
+
+<div class="nav" id="nav" style="display:none;">
+<div onclick="show('home')">Home</div>
+<div onclick="show('profil')">Profil</div>
+</div>
+
+<script>
+let saldo=50000;
+let a,b,hasil;
+
+function login(){
+let user=document.getElementById('user').value;
+let nomor=document.getElementById('nomor').value;
+let pin=document.getElementById('pin').value;
+if(!user||!nomor||!pin){alert('Isi semua');return;}
+document.getElementById('login').style.display='none';
+document.getElementById('app').style.display='block';
+document.getElementById('nav').style.display='flex';
+document.getElementById('showUser').innerText=user;
+document.getElementById('showNomor').innerText=nomor;
+buatSoal();
+updateSaldo();
+}
+
+function show(p){
+document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+document.getElementById(p).classList.add('active');
+}
+
+function updateSaldo(){
+document.getElementById('saldo').innerText='Rp'+saldo.toLocaleString('id-ID');
+}
+
+function tarik(){
+let j=Number(document.getElementById('jumlah').value);
+if(!j||j>saldo){alert('Saldo tidak cukup');return;}
+saldo-=j;
+updateSaldo();
+document.getElementById('riwayat').innerHTML=`<div>Tarik - Rp${j}</div>`+document.getElementById('riwayat').innerHTML;
+}
+
+function buatSoal(){
+a=Math.floor(Math.random()*10)+1;
+b=Math.floor(Math.random()*10)+1;
+hasil=a+b;
+document.getElementById('soal').innerText=a+' + '+b+' = ?';
+}
+
+function cek(){
+let j=Number(document.getElementById('jawaban').value);
+if(j===hasil){
+saldo+=5000;
+updateSaldo();
+document.getElementById('riwayat').innerHTML=`<div>+ Bonus Rp5.000</div>`+document.getElementById('riwayat').innerHTML;
+buatSoal();
+}else{alert('Salah');}
+}
+</script>
+
+</body>
+</html>
